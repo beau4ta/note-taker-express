@@ -16,6 +16,8 @@ app.use(express.static('public'));
 app.post('/api/notes', (req, res) => {
   let newNote = req.body
   let notes = JSON.parse(fs.readFileSync('./db/db.json'));
+  let notesLength = notes.length
+  newNote.id = notesLength + 1
 
   notes.push(newNote);
 
