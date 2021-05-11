@@ -14,28 +14,14 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.post('/api/notes', (req, res) => {
-    try {
-        notes = fs.readFileSync('./db/db.json', "utf8");
-        console.log(notes);
+  let newNote = req.body
+  let notes = JSON.parse(fs.readFileSync('./db/db.json'));
 
-        notes = JSON.parse(notes);
+  notes.push(newNote);
 
-        req.body.id = notes.length;
-        notes.push(req.body);
-        notes = JSON.stringify(notes);
-
-        fs.writeFile('./db/db.json', notes, 'utf8', (err) => {
-            if (err) throw err;
-        });
-        res.json(JSON.parse(notes));
-        console.log("New note created!");
-
-        fs.readFileSync('./db/db.json', 'utf8', (err) => {
-            if (err) throw err;
-        })
-    } catch (err) {
-        throw err;
-    };
+  fs.writeFileSync('./db/db.json', JSON.stringify(notes));
+  res.json(notes);
+  console.log("Note created!")
 });
 
 app.delete('/api/notes/:id', (req, res) => {
@@ -54,6 +40,11 @@ app.delete('/api/notes/:id', (req, res) => {
 
 app.get('/api/notes', (req, res) => {
     res.json(db);
+    console.log("GET NOTES!")
+})
+
+app.get('api/notes/:id', (req, res) => {
+    res.json(notes[req.params.id]);
 })
 
 app.get("/notes", (req, res) => {
