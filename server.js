@@ -13,6 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
+app.get('/api/notes', (req, res) => {
+    let notes = JSON.parse(fs.readFileSync('./db/db.json')); 
+    res.json(notes);
+    console.log("GET NOTES!")
+});
+
 app.post('/api/notes', (req, res) => {
   let newNote = req.body
   let notes = JSON.parse(fs.readFileSync('./db/db.json'));
@@ -38,11 +44,6 @@ app.delete('/api/notes/:id', (req, res) => {
         console.log("Note deleted!")
     });
     res.json(db);
-});
-
-app.get('/api/notes', (req, res) => {
-    res.json(db);
-    console.log("GET NOTES!")
 });
 
 app.get("/notes", (req, res) => {
